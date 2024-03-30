@@ -36,9 +36,6 @@ getAccessToken()
     console.error('Failed to get access token:', error);
   });
    
-    // const apiUrl1 = 'http://20.244.56.144/test/companies/AMZ/categories/Phone/products?top=5&minPrice=1&maxPrice=10000'
-
-
 
 async function fetchDataWithToken(company,n,product) {
     const accessToken = await getAccessToken();
@@ -48,20 +45,30 @@ async function fetchDataWithToken(company,n,product) {
 
     try {
       const response = await axios.get(apiUrl, { headers });
-      console.log('API response:', response.data);
+      //console.log('API response:', response.data);
+      return response.data;
     } catch (error) {
       console.error('Error fetching data:', error);
     }
 }
 const companies = ['AMZ', 'FLP', 'SNP', 'MYN', 'AZO'];
-async function compareProducts(companies) {
+var Finaldata = {}
+async function compareProducts(n,productname) {
     for (var i =0;i<5;i++) {
-      await fetchDataWithToken(companies[i],5,'Phone');
-      console.log("---------------------------------------------------");
-    }
+        
+   
+        const data = await fetchDataWithToken(companies[i],n,productname);
+        Finaldata = {...Finaldata, [companies[i]]: data};
+        console.log(data);
+      console.log("**********************************************************");
+     }
+     console.log(Finaldata);
+     console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    return Finaldata;
 }
   
-compareProducts(companies)
+
+
 
   
 
@@ -72,6 +79,11 @@ app.listen(port,function(){
     console.log(`Listening on port: ${port}`);
 })
 
-app.get('/',function(req,res){
-    res.send("Hello World");
+app.get('/categories/:categoryname/products/:n',function(req,res){
+    const categoryname = req.params.categoryname;
+    const n = req.params.n;
+    var result = compareProducts(n,categoryname);
+    console.log("*************************************************************");
+    console.log(result);
+    res.send(result);
 })
