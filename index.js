@@ -82,8 +82,10 @@ app.listen(port,function(){
 app.get('/categories/:categoryname/products/:n',function(req,res){
     const categoryname = req.params.categoryname;
     const n = req.params.n;
+    console.log("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
     var result = compareProducts(n,categoryname);
     console.log("*************************************************************");
     console.log(result);
-    res.send(result);
+    console.log("*************************************************************");
+    res.send(JSON.stringify(result));
 })
